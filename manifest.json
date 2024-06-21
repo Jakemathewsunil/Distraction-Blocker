@@ -3,7 +3,7 @@
     "name": "Distraction Blocker",
     "version": "1.0",
     "description": "Block distracting websites.",
-    "permissions": ["storage", "webRequest", "webRequestBlocking", "activeTab"],
+    "permissions": ["storage", "declarativeNetRequest"],
     "background": {
         "service_worker": "background.js"
     },

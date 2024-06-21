@@ -1,15 +1,18 @@
 document.getElementById('blockBtn').addEventListener('click', function() {
     let siteUrl = document.getElementById('siteUrl').value;
     if (siteUrl) {
-        chrome.storage.sync.get('blockedSites', function(data) {
-            let blockedSites = data.blockedSites || [];
-            blockedSites.push(siteUrl);
-            chrome.storage.sync.set({ blockedSites: blockedSites }, function() {
-                alert(siteUrl + ' has been blocked.');
-                displayBlockedSites();
-            });
+        chrome.runtime.sendMessage({ action: "blockSite", site: siteUrl }, function(response) {
+            alert(response.message);
+            displayBlockedSites();
         });
     }
+});
+
+document.getElementById('unblockBtn').addEventListener('click', function() {
+    chrome.runtime.sendMessage({ action: "unblockSites" }, function(response) {
+        alert(response.message);
+        displayBlockedSites();
+    });
 });
 
 function displayBlockedSites() {
