@@ -6,13 +6,14 @@
         body { font-family: Arial, sans-serif; }
         input { margin-bottom: 10px; }
         button { margin-right: 10px; }
+        ul { list-style: none; padding: 0; }
+        li { margin-bottom: 10px; }
     </style>
 </head>
 <body>
     <h2>Distraction Blocker</h2>
-    <input type="text" id="siteUrl" placeholder="Enter site to block">
-    <button id="blockBtn">Block Site</button>
-    <button id="unblockBtn">Unblock All Sites</button>
+    <input type="text" id="siteUrl" placeholder="Enter site to add to block list">
+    <button id="addSiteBtn">Add Site</button>
     <ul id="blockedSites"></ul>
     <script src="popup.js"></script>
 </body>
