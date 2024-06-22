@@ -1,21 +1,25 @@
-document.body.innerHTML = `
-    <div id="blocker-message" style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: black;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        color: white;
-        font-size: 24px;
-        font-family: Arial, sans-serif;
-    ">
-        This site is blocked
-    </div>
-`;
-document.body.style.overflow = 'hidden';
-document.body.style.pointerEvents = 'none';
+(function() {
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'black';
+    overlay.style.display = 'flex';
+    overlay.style.justifyContent = 'center';
+    overlay.style.alignItems = 'center';
+    overlay.style.zIndex = '9999999';
+    overlay.style.pointerEvents = 'all';
+  
+    const message = document.createElement('div');
+    message.innerText = 'This site is blocked';
+    message.style.color = 'white';
+    message.style.fontSize = '24px';
+    message.style.fontFamily = 'Arial, sans-serif';
+  
+    overlay.appendChild(message);
+    document.body.appendChild(overlay);
+    document.body.style.overflow = 'hidden';
+  })();
+  

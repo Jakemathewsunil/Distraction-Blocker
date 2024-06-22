@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Distraction Blocker</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        input { margin-bottom: 10px; }
-        button { margin-right: 10px; }
-        ul { list-style: none; padding: 0; }
-        li { margin-bottom: 10px; display: flex; align-items: center; }
-        label { flex-grow: 1; }
-    </style>
+  <title>Distraction Blocker</title>
+  <style>
+    body { font-family: Arial, sans-serif; width: 300px; }
+    .blocked-sites { margin-top: 20px; }
+    .site { display: flex; justify-content: space-between; align-items: center; }
+    .site span { flex-grow: 1; }
+    .toggle { margin-left: 10px; }
+  </style>
 </head>
 <body>
-    <h2>Distraction Blocker</h2>
-    <input type="text" id="siteUrl" placeholder="Enter site to add to block list">
-    <button id="addSiteBtn">Add Site</button>
-    <ul id="blockedSites"></ul>
-    <script src="popup.js"></script>
+  <h2>Distraction Blocker</h2>
+  <input type="text" id="siteInput" placeholder="Enter site URL" />
+  <button id="addSiteButton">Add Site</button>
+  <div class="blocked-sites" id="blockedSites"></div>
+
+  <script src="popup.js"></script>
 </body>
 </html>

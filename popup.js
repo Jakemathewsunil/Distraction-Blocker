@@ -1,51 +1,58 @@
-document.getElementById('addSiteBtn').addEventListener('click', function() {
-    let siteUrl = document.getElementById('siteUrl').value;
-    if (siteUrl) {
-        chrome.runtime.sendMessage({ action: "addSite", site: siteUrl }, function(response) {
-            alert(response.message);
-            displayBlockedSites();
-        });
-    }
-});
-
-function displayBlockedSites() {
-    chrome.storage.sync.get('blockedSites', function(data) {
-        let blockedSites = data.blockedSites || {};
-        let blockedSitesList = document.getElementById('blockedSites');
-        blockedSitesList.innerHTML = '';
-        for (let site in blockedSites) {
-            let li = document.createElement('li');
-            li.innerHTML = `
-                <label>
-                    <input type="checkbox" ${blockedSites[site] ? 'checked' : ''} data-site="${site}">
-                    ${site}
-                </label>
-                <button data-site="${site}" class="removeSiteBtn">Remove</button>
-            `;
-            blockedSitesList.appendChild(li);
+document.addEventListener('DOMContentLoaded', () => {
+    const siteInput = document.getElementById('siteInput');
+    const addSiteButton = document.getElementById('addSiteButton');
+    const blockedSitesDiv = document.getElementById('blockedSites');
+  
+    function updateBlockedSites() {
+      chrome.storage.sync.get('blockedSites', (data) => {
+        const blockedSites = data.blockedSites || {};
+        blockedSitesDiv.innerHTML = '';
+        for (const site in blockedSites) {
+          const siteDiv = document.createElement('div');
+          siteDiv.className = 'site';
+          const siteName = document.createElement('span');
+          siteName.textContent = site;
+          const toggle = document.createElement('input');
+          toggle.type = 'checkbox';
+          toggle.className = 'toggle';
+          toggle.checked = blockedSites[site];
+          toggle.addEventListener('change', () => {
+            chrome.runtime.sendMessage({
+              action: 'toggleBlock',
+              site: site,
+              block: toggle.checked
+            }, (response) => {
+              alert(response.message);
+            });
+          });
+          const removeButton = document.createElement('button');
+          removeButton.textContent = 'Remove';
+          removeButton.addEventListener('click', () => {
+            chrome.runtime.sendMessage({ action: 'removeSite', site: site }, (response) => {
+              alert(response.message);
+              updateBlockedSites();
+            });
+          });
+          siteDiv.appendChild(siteName);
+          siteDiv.appendChild(toggle);
+          siteDiv.appendChild(removeButton);
+          blockedSitesDiv.appendChild(siteDiv);
         }
-
-        // Add event listeners for toggles and remove buttons
-        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                let site = this.getAttribute('data-site');
-                let block = this.checked;
-                chrome.runtime.sendMessage({ action: "toggleBlock", site: site, block: block }, function(response) {
-                    alert(response.message);
-                });
-            });
+      });
+    }
+  
+    addSiteButton.addEventListener('click', () => {
+      const site = siteInput.value.trim();
+      if (site) {
+        chrome.runtime.sendMessage({ action: 'addSite', site: site }, (response) => {
+          alert(response.message);
+          if (response.success) {
+            updateBlockedSites();
+          }
         });
-
-        document.querySelectorAll('.removeSiteBtn').forEach(button => {
-            button.addEventListener('click', function() {
-                let site = this.getAttribute('data-site');
-                chrome.runtime.sendMessage({ action: "removeSite", site: site }, function(response) {
-                    alert(response.message);
-                    displayBlockedSites();
-                });
-            });
-        });
+      }
     });
-}
-
-document.addEventListener('DOMContentLoaded', displayBlockedSites);
+  
+    updateBlockedSites();
+  });
+  
