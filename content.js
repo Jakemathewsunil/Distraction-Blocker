@@ -1,25 +1,21 @@
-(function() {
-    const overlay = document.createElement('div');
-    overlay.style.position = 'fixed';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
-    overlay.style.backgroundColor = 'black';
-    overlay.style.display = 'flex';
-    overlay.style.justifyContent = 'center';
-    overlay.style.alignItems = 'center';
-    overlay.style.zIndex = '9999999';
-    overlay.style.pointerEvents = 'all';
-  
-    const message = document.createElement('div');
-    message.innerText = 'This site is blocked';
-    message.style.color = 'white';
-    message.style.fontSize = '24px';
-    message.style.fontFamily = 'Arial, sans-serif';
-  
-    overlay.appendChild(message);
-    document.body.appendChild(overlay);
-    document.body.style.overflow = 'hidden';
-  })();
-  
+chrome.storage.sync.get("blockedSites", (data) => {
+  let blockedSites = data.blockedSites || {};
+  let currentSite = window.location.hostname;
+  let isBlocked = Object.keys(blockedSites).some(site => currentSite.includes(site) && blockedSites[site]);
+
+  if (isBlocked) {
+    document.documentElement.innerHTML = `
+      <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: black;" data-blocker="true">
+        <h1 style="color: white;">This site is blocked</h1>
+      </div>
+    `;
+    document.documentElement.style.overflow = 'hidden';
+  } else {
+    // Clear any previously injected block screen
+    let blockScreen = document.querySelector('[data-blocker="true"]');
+    if (blockScreen) {
+      blockScreen.remove();
+    }
+    document.documentElement.style.overflow = '';
+  }
+});
